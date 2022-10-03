@@ -1,0 +1,21 @@
+
+{% extends 'base.html' %}
+
+{% block body %}
+
+<table>
+  <tr>
+      {% for column_title in out_column_titles %}
+          <th>{{column_title}}</th>
+      {% endfor %}
+  </tr>
+  {% for log_row in out_data %}
+    <tr>
+        {% for item in log_row %}
+            <td>{{item}}</td>
+        {% endfor %}
+    </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

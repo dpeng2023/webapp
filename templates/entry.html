@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<form method='POST' action='/mile_time'>
+  <p>Enter Racer's Race Stats:</p>
+  <table>
+    <tr><td>First Name:</td><td><input name ='in_first_name' type='TEXT' width='10'></td></tr>
+    <tr><td>Last Name:</td><td><input name ='in_last_name' type='TEXT' width='10'></td></tr>
+    <tr><td>Race:</td><td><input name ='in_race' type='TEXT' width='10'</td></tr>
+    <tr><td>Miles:</td><td><input name ='in_miles' type='TEXT' width='2'></td></tr>
+    <tr><td>Minutes:</td><td><input name ='in_minutes' type='TEXT' width='2'></td></tr>
+    <tr><td>Seconds:</td><td><input name ='in_seconds' type='TEXT' width='2'></td></tr>
+  </table>
+  Grade:
+  <br/>
+  <input type="radio" id="sixth" name="in_grade" value="6">
+  <label for="sixth">Sixth</label><br>
+  <input type="radio" id="seventh" name="in_grade" value="7">
+  <label for="seventh">Seventh</label><br>
+  <input type="radio" id="eighth" name="in_grade" value="8">
+  <label for="eighth">Eighth</label><br>
+  <p>After entering data; click the submit button:</p>
+  <p><input value='Calculate Mile Time' type='SUBMIT'></p>
+</form>
+
+{% endblock %}
