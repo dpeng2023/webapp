@@ -4,9 +4,24 @@
 from flask import Flask, render_template, request, escape, Markup
 from calc_stats import calc_time_per_mile
 
+from DBcm import UseDatabase;
+
 app = Flask(__name__)
 
 app_log = 'calc_stats.log'
+
+app.config['dbconfig'] = {'host': '127.0.0.1',
+                          'user': 'admin',
+                          'password': 'G0FwdM@m@',
+                          'database': 'crosscountryDB', }
+
+def db_race_log(first_name, last_name, grade, race, miles, sec_per_race, sec_per_mile) -> None:
+    with UseDatabase(app.config['dbconfig']) as cursor:
+        _SQL = """insert into race_log
+                  (first_name, last_name, grade, race, miles, sec_per_race, sec_per_mile)
+                  values
+                  (%s, %s, %s, %s, %s, %s, %s)"""
+        cursor.execute(_SQL, (first_name, last_name, grade, race, miles, sec_per_race, sec_per_mile))
 
 #TEST4 writes flask request and result details to the app's log file
 #TODO:  add exception-handling
@@ -60,6 +75,7 @@ def do_calc_mile_time() -> 'html':
     try:
         first_name = request.form['in_first_name']
         last_name = request.form['in_last_name']
+        race = request.form['in_race']
         miles = request.form['in_miles']
         minutes = request.form['in_minutes']
         seconds = request.form['in_seconds']
@@ -71,16 +87,18 @@ def do_calc_mile_time() -> 'html':
 
     race_stats = calc_time_per_mile(miles, minutes, seconds)
 
-    # DEBUG
-    # print('in_grade is:  ', grade)
-    # print('mile_time is:  ', race_stats[0])
+    mile_time = race_stats[0]
+    sec_per_mile = race_stats[1]
+    sec_per_race = race_stats[2]
 
     log_request(request, race_stats)
+
+    db_race_log(first_name, last_name, grade, race, miles, sec_per_race, sec_per_mile)
 
     return render_template('results.html',
                             out_first_name = first_name,
                             out_last_name = last_name,
-                            out_mile_time = race_stats[0],)
+                            out_mile_time = mile_time,)
 
 
 #TEST 6:  Load the app log file and print it to a results page
